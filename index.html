@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Hotel - Premium Accommodations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" /><stop offset="100%" style="stop-color:rgba(255,255,255,0.05);stop-opacity:1" /></linearGradient></defs><rect width="1200" height="800" fill="url(%23grad1)"/></svg>') center/cover;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            animation: slideUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: slideUp 1s ease-out 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .booking-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            animation: slideUp 1s ease-out 0.6s both;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #667eea;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            color: white;
+        }
+
+        .rooms-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .room-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .room-image {
+            height: 250px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250"><rect width="400" height="250" fill="rgba(255,255,255,0.1)"/><circle cx="100" cy="80" r="30" fill="rgba(255,255,255,0.2)"/><circle cx="300" cy="170" r="40" fill="rgba(255,255,255,0.15)"/></svg>') center/cover;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .room-info {
+            padding: 1.5rem;
+        }
+
+        .room-price {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .upsell-offers {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .upsell-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+        }
+
+        .chatbot-window.open {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .reviews-section {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .review-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .newsletter {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .newsletter-form {
+            max-width: 500px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .payment-icon:hover {
+            transform: scale(1.2);
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Simulated API configurations
+        const API_CONFIG = {
+            cloudbeds: {
+                baseUrl: 'https://api.cloudbeds.com',
+                apiKey: 'your-cloudbeds-api-key'
+            },
+            mailchimp: {
+                baseUrl: 'https://us1.api.mailchimp.com/3.0',
+                apiKey: 'your-mailchimp-api-key'
+            },
+            stripe: {
+                publishableKey: 'pk_test_your-stripe-key'
+            }
+        };
+
+        // Simulated room data
+        const ROOMS_DATA = [
+            {
+                id: 1,
+                name: 'Deluxe Ocean View',
+                price: 299,
+                image: '/images/deluxe-ocean.jpg',
+                amenities: ['Ocean View', 'King Bed', 'Mini Bar', 'WiFi'],
+                upsells: [
+                    { name: 'Late Checkout', price: 50 },
+                    { name: 'Spa Package', price: 150 },
+                    { name: 'Room Service Credit', price: 75 }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Premium Suite',
+                price: 499,
+                image: '/images/premium-suite.jpg',
+                amenities: ['Separate Living Area', 'Balcony', 'Jacuzzi', 'Butler Service'],
+                upsells: [
+                    { name: 'Champagne Welcome', price: 100 },
+                    { name: 'Private Chef', price: 300 },
+                    { name: 'Airport Transfer', price: 120 }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Garden Villa',
+                price: 699,
+                image: '/images/garden-villa.jpg',
+                amenities: ['Private Garden', 'Pool Access', 'Kitchen', 'Terrace'],
+                upsells: [
+                    { name: 'Private Pool Heating', price: 80 },
+                    { name: 'Garden Party Setup', price: 200 },
+                    { name: 'Personal Concierge', price: 250 }
+                ]
+            }
+        ];
+
+        // Simulated reviews
+        const REVIEWS_DATA = [
+            {
+                id: 1,
+                name: 'Sarah Johnson',
+                rating: 5,
+                text: 'Absolutely fantastic stay! The service was impeccable and the ocean view was breathtaking.',
+                date: '2024-05-15'
+            },
+            {
+                id: 2,
+                name: 'Michael Chen',
+                rating: 5,
+                text: 'Best hotel experience I\'ve ever had. The staff went above and beyond to make our anniversary special.',
+                date: '2024-05-10'
+            },
+            {
+                id: 3,
+                name: 'Emily Davis',
+                rating: 4,
+                text: 'Beautiful property with excellent amenities. Will definitely be returning next year.',
+                date: '2024-05-05'
+            }
+        ];
+
+        // Main App Component
+        function App() {
+            const [bookingData, setBookingData] = useState({
+                checkIn: '',
+                checkOut: '',
+                guests: 1,
+                rooms: 1
+            });
+            const [selectedRoom, setSelectedRoom] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [chatOpen, setChatOpen] = useState(false);
+            const [chatMessages, setChatMessages] = useState([
+                { type: 'bot', text: 'Hello! How can I help you today?' }
+            ]);
+            const [newsletter, setNewsletter] = useState('');
+            const [modalOpen, setModalOpen] = useState(false);
+
+            // Cloudbeds API Integration
+            const searchRooms = async () => {
+                setLoading(true);
+                try {
+                    // Simulated API call to Cloudbeds
+                    const response = await new Promise(resolve => 
+                        setTimeout(() => resolve({ data: ROOMS_DATA }), 2000)
+                    );
+                    console.log('Rooms loaded from Cloudbeds API');
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Error fetching rooms:', error);
+                    setLoading(false);
+                }
+            };
+
+            // Payment processing with Stripe
+            const processPayment = async (roomId, upsells = []) => {
+                try {
+                    // Simulated Stripe integration
+                    const paymentData = {
+                        roomId,
+                        upsells,
+                        amount: calculateTotal(roomId, upsells),
+                        currency: 'usd'
+                    };
+                    console.log('Processing payment:', paymentData);
+                    // In real implementation, you'd integrate with Stripe here
+                    setModalOpen(true);
+                } catch (error) {
+                    console.error('Payment error:', error);
+                }
+            };
+
+            // Mailchimp integration for newsletter
+            const subscribeNewsletter = async (email) => {
+                try {
+                    // Simulated Mailchimp API call
+                    console.log('Subscribing to newsletter:', email);
+                    setNewsletter('');
+                    alert('Successfully subscribed to newsletter!');
+                } catch (error) {
+                    console.error('Newsletter subscription error:', error);
+                }
+            };
+
+            // Calculate total with upsells
+            const calculateTotal = (roomId, upsells) => {
+                const room = ROOMS_DATA.find(r => r.id === roomId);
+                const upsellTotal = upsells.reduce((sum, upsell) => sum + upsell.price, 0);
+                return room.price + upsellTotal;
+            };
+
+            // Chatbot functionality
+            const sendMessage = (message) => {
+                setChatMessages(prev => [...prev, { type: 'user', text: message }]);
+                
+                // Simulated bot response
+                setTimeout(() => {
+                    const responses = [
+                        'I can help you with room bookings, amenities, and local attractions.',
+                        'Would you like to know more about our spa services?',
+                        'Our concierge team is available 24/7 to assist you.',
+                        'I can arrange special services for your stay.'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    setChatMessages(prev => [...prev, { type: 'bot', text: randomResponse }]);
+                }, 1000);
+            };
+
+            useEffect(() => {
+                // Initialize tracking pixels
+                if (typeof gtag !== 'undefined') {
+                    gtag('config', 'GA_MEASUREMENT_ID');
+                }
+                
+                // Facebook Pixel
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'PageView');
+                }
+                
+                // TikTok Pixel
+                if (typeof ttq !== 'undefined') {
+                    ttq.page();
+                }
+            }, []);
+
+            return (
+                <div className="App">
+                    <Header />
+                    <HeroSection 
+                        bookingData={bookingData}
+                        setBookingData={setBookingData}
+                        onSearch={searchRooms}
+                        loading={loading}
+                    />
+                    <FeaturesSection />
+                    <RoomsSection 
+                        rooms={ROOMS_DATA}
+                        onBookRoom={processPayment}
+                    />
+                    <ReviewsSection reviews={REVIEWS_DATA} />
+                    <NewsletterSection 
+                        newsletter={newsletter}
+                        setNewsletter={setNewsletter}
+                        onSubscribe={subscribeNewsletter}
+                    />
+                    <Footer />
+                    <Chatbot 
+                        isOpen={chatOpen}
+                        setIsOpen={setChatOpen}
+                        messages={chatMessages}
+                        onSendMessage={sendMessage}
+                    />
+                    <BookingModal 
+                        isOpen={modalOpen}
+                        onClose={() => setModalOpen(false)}
+                    />
+                </div>
+            );
+        }
+
+        // Header Component
+        function Header() {
+            return (
+                <header>
+                    <div className="container">
+                        <nav>
+                            <div className="logo">Luxe Hotel</div>
+                            <ul className="nav-links">
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#rooms">Rooms</a></li>
+                                <li><a href="#amenities">Amenities</a></li>
+                                <li><a href="#reviews">Reviews</a></li>
+                                <li><a href="#contact">Contact</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </header>
+            );
+        }
+
+        // Hero Section Component
+        function HeroSection({ bookingData, setBookingData, onSearch, loading }) {
+            const handleInputChange = (field, value) => {
+                setBookingData(prev => ({ ...prev, [field]: value }));
+            };
+
+            const handleSearch = (e) => {
+                e.preventDefault();
+                onSearch();
+            };
+
+            return (
+                <section className="hero" id="home">
+                    <div className="container">
+                        <div className="hero-content">
+                            <h1>Luxury Awaits</h1>
+                            <p>Experience unparalleled comfort and elegance</p>
+                            
+                            <form className="booking-form" onSubmit={handleSearch}>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Check-in Date</label>
+                                        <input 
+                                            type="date" 
+                                            value={bookingData.checkIn}
+                                            onChange={(e) => handleInputChange('checkIn', e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Check-out Date</label>
+                                        <input 
+                                            type="date" 
+                                            value={bookingData.checkOut}
+                                            onChange={(e) => handleInputChange('checkOut', e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Guests</label>
+                                        <select 
+                                            value={bookingData.guests}
+                                            onChange={(e) => handleInputChange('guests', e.target.value)}
+                                        >
+                                            {[1,2,3,4,5,6].map(num => (
+                                                <option key={num} value={num}>{num} Guest{num > 1 ? 's' : ''}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Rooms</label>
+                                        <select 
+                                            value={bookingData.rooms}
+                                            onChange={(e) => handleInputChange('rooms', e.target.value)}
+                                        >
+                                            {[1,2,3,4].map(num => (
+                                                <option key={num} value={num}>{num} Room{num > 1 ? 's' : ''}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" className="search-btn" disabled={loading}>
+                                    {loading ? 'Searching...' : 'Search Rooms'}
+                                </button>
+                            </form>
+
+                            {loading && (
+                                <div className="loading">
+                                    <div className="spinner"></div>
+                                    <p>Finding the perfect rooms for you...</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Features Section Component
+        function FeaturesSection() {
+            const features = [
+                { icon: 'fas fa-wifi', title: 'Free WiFi', desc: 'High-speed internet throughout the property' },
+                { icon: 'fas fa-swimming-pool', title: 'Pool & Spa', desc: 'Relax in our luxurious facilities' },
+                { icon: 'fas fa-concierge-bell', title: '24/7 Service', desc: 'Round-the-clock concierge assistance' },
+                { icon: 'fas fa-utensils', title: 'Fine Dining', desc: 'World-class restaurants and room service' },
+                { icon: 'fas fa-car', title: 'Valet Parking', desc: 'Complimentary valet service' },
+                { icon: 'fas fa-dumbbell', title: 'Fitness Center', desc: 'State-of-the-art gym equipment' }
+            ];
+
+            return (
+                <section className="features" id="amenities">
+                    <div className="container">
+                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
+                            Premium Amenities
+                        </h2>
+                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
+                            Everything you need for the perfect stay
+                        </p>
+                        
+                        <div className="features-grid">
+                            {features.map((feature, index) => (
+                                <div key={index} className="feature-card">
+                                    <i className={`feature-icon ${feature.icon}`}></i>
+                                    <h3>{feature.title}</h3>
+                                    <p>{feature.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Rooms Section Component
+        function RoomsSection({ rooms, onBookRoom }) {
+            const [selectedUpsells, setSelectedUpsells] = useState({});
+
+            const toggleUpsell = (roomId, upsell) => {
+                setSelectedUpsells(prev => {
+                    const roomUpsells = prev[roomId] || [];
+                    const exists = roomUpsells.find(u => u.name === upsell.name);
+                    
+                    if (exists) {
+                        return {
+                            ...prev,
+                            [roomId]: roomUpsells.filter(u => u.name !== upsell.name)
+                        };
+                    } else {
+                        return {
+                            ...prev,
+                            [roomId]: [...roomUpsells, upsell]
+                        };
+                    }
+                });
+            };
+
+            const handleBookRoom = (roomId) => {
+                const upsells = selectedUpsells[roomId] || [];
+                onBookRoom(roomId, upsells);
+            };
+
+            return (
+                <section className="rooms-section" id="rooms">
+                    <div className="container">
+                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
+                            Luxurious Accommodations
+                        </h2>
+                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
+                            Choose from our collection of premium rooms and suites
+                        </p>
+                        
+                        <div className="rooms-grid">
+                            {rooms.map(room => (
+                                <div key={room.id} className="room-card">
+                                    <div className="room-image"></div>
+                                    <div className="room-info">
+                                        <h3>{room.name}</h3>
+                                        <div className="room-price">${room.price}/night</div>
+                                        <div style={{marginBottom: '1rem'}}>
+                                            {room.amenities.map((amenity, idx) => (
+                                                <span key={idx} style={{
+                                                    display: 'inline-block',
+                                                    background: '#e9ecef',
+                                                    padding: '0.25rem 0.5rem',
+                                                    borderRadius: '15px',
+                                                    fontSize: '0.9rem',
+                                                    margin: '0.25rem 0.25rem 0 0'
+                                                }}>
+                                                    {amenity}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        
+                                        <div className="upsell-offers">
+                                            <div className="upsell-title">
+                                                <i className="fas fa-star" style={{marginRight: '0.5rem'}}></i>
+                                                Enhance Your Stay
+                                            </div>
+                                            {room.upsells.map((upsell, idx) => (
+                                                <label key={idx} style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    margin: '0.5rem 0',
+                                                    cursor: 'pointer'
+                                                }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        onChange={() => toggleUpsell(room.id, upsell)}
+                                                        style={{marginRight: '0.5rem'}}
+                                                    />
+                                                    <span>{upsell.name} (+${upsell.price})</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                        
+                                        <button 
+                                            className="search-btn"
+                                            onClick={() => handleBookRoom(room.id)}
+                                            style={{marginTop: '1rem'}}
+                                        >
+                                            Book Now - ${room.price + (selectedUpsells[room.id]?.reduce((sum, u) => sum + u.price, 0) || 0)}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Reviews Section Component
+        function ReviewsSection({ reviews }) {
+            return (
+                <section className="reviews-section" id="reviews">
+                    <div className="container">
+                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
+                            Guest Reviews
+                        </h2>
+                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
+                            See what our guests are saying about their experience
+                        </p>
+                        
+                        <div className="reviews-grid">
+                            {reviews.map(review => (
+                                <div key={review.id} className="review-card">
+                                    <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
+                                        <div style={{
+                                            width: '50px',
+                                            height: '50px',
+                                            borderRadius: '50%',
+                                            background: '#667eea',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            marginRight: '1rem'
+                                        }}>
+                                            {review.name.split(' ').map(n => n[0]).join('')}
+                                        </div>
+                                        <div>
+                                            <h4>{review.name}</h4>
+                                            <div style={{color: '#ffc107'}}>
+                                                {'★'.repeat(review.rating)}{'☆'.repeat(5-review.rating)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style={{fontStyle: 'italic', marginBottom: '1rem'}}>"{review.text}"</p>
+                                    <small style={{color: '#666'}}>{new Date(review.date).toLocaleDateString()}</small>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Newsletter Section Component
+        function NewsletterSection({ newsletter, setNewsletter, onSubscribe }) {
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (newsletter) {
+                    onSubscribe(newsletter);
+                }
+            };
+
+            return (
+                <section className="newsletter">
+                    <div className="container">
+                        <h2>Stay Updated</h2>
+                        <p>Subscribe to our newsletter for exclusive offers and updates</p>
+                        
+                        <form className="newsletter-form" onSubmit={handleSubmit}>
+                            <input
+                                type="email"
+                                placeholder="Enter your email address"
+                                value={newsletter}
+                                onChange={(e) => setNewsletter(e.target.value)}
+                                required
+                            />
+                            <button type="submit">Subscribe</button>
+                        </form>
+                        
+                        <div className="payment-methods">
+                            <i className="fab fa-cc-visa payment-icon"></i>
+                            <i className="fab fa-cc-mastercard payment-icon"></i>
+                            <i className="fab fa-cc-amex payment-icon"></i>
+                            <i className="fab fa-cc-paypal payment-icon"></i>
+                            <i className="fab fa-apple-pay payment-icon"></i>
+                            <i className="fab fa-google-pay payment-icon"></i>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Chatbot Component
+        function Chatbot({ isOpen, setIsOpen, messages, onSendMessage }) {
+            const [inputMessage, setInputMessage] = useState('');
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages]);
+
+            const handleSendMessage = (e) => {
+                e.preventDefault();
+                if (inputMessage.trim()) {
+                    onSendMessage(inputMessage);
+                    setInputMessage('');
+                }
+            };
+
+            return (
+                <div className="chatbot">
+                    <div className={`chatbot-window ${isOpen ? 'open' : ''}`}>
+                        <div className="chat-header">
+                            <span>Hotel Assistant</span>
+                            <span 
+                                className="close" 
+                                onClick={() => setIsOpen(false)}
+                                style={{float: 'right', cursor: 'pointer'}}
+                            >
+                                ×
+                            </span>
+                        </div>
+                        <div className="chat-messages">
+                            {messages.map((message, index) => (
+                                <div key={index} style={{
+                                    margin: '0.5rem 0',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: '15px',
+                                    background: message.type === 'user' ? '#667eea' : '#f1f1f1',
+                                    color: message.type === 'user' ? 'white' : '#333',
+                                    alignSelf: message.type === 'user' ? 'flex-end' : 'flex-start',
+                                    maxWidth: '80%'
+                                }}>
+                                    {message.text}
+                                </div>
+                            ))}
+                            <div ref={messagesEndRef} />
+                        </div>
+                        <form className="chat-input" onSubmit={handleSendMessage}>
+                            <input
+                                type="text"
+                                placeholder="Type your message..."
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                            />
+                        </form>
+                    </div>
+                    <button 
+                        className="chatbot-toggle"
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <i className="fas fa-comments"></i>
+                    </button>
+                </div>
+            );
+        }
+
+        // Booking Modal Component
+        function BookingModal({ isOpen, onClose }) {
+            if (!isOpen) return null;
+
+            return (
+                <div className="modal" style={{display: 'block'}}>
+                    <div className="modal-content">
+                        <span className="close" onClick={onClose}>&times;</span>
+                        <h2 style={{color: '#667eea', marginBottom: '1rem'}}>Booking Confirmed!</h2>
+                        <div style={{textAlign: 'center'}}>
+                            <i className="fas fa-check-circle" style={{
+                                fontSize: '4rem',
+                                color: '#28a745',
+                                marginBottom: '1rem'
+                            }}></i>
+                            <p>Thank you for your booking! You will receive a confirmation email shortly.</p>
+                            <p style={{marginTop: '1rem', color: '#666'}}>
+                                Our concierge team will contact you within 24 hours to finalize your arrangements.
+                            </p>
+                            <button 
+                                className="search-btn" 
+                                onClick={onClose}
+                                style={{marginTop: '1rem', width: 'auto', padding: '0.5rem 2rem'}}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Footer Component
+        function Footer() {
+            return (
+                <footer>
+                    <div className="container">
+                        <div className="footer-content">
+                            <div>
+                                <h3>Luxe Hotel</h3>
+                                <p>Experience luxury like never before. Our commitment to excellence ensures every guest enjoys an unforgettable stay.</p>
+                                <div style={{marginTop: '1rem'}}>
+                                    <i className="fab fa-facebook" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
+                                    <i className="fab fa-instagram" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
+                                    <i className="fab fa-twitter" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
+                                    <i className="fab fa-linkedin" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Quick Links</h4>
+                                <ul style={{listStyle: 'none', padding: 0}}>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#rooms" style={{color: '#ccc', textDecoration: 'none'}}>Rooms & Suites</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#amenities" style={{color: '#ccc', textDecoration: 'none'}}>Amenities</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#dining" style={{color: '#ccc', textDecoration: 'none'}}>Dining</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#spa" style={{color: '#ccc', textDecoration: 'none'}}>Spa & Wellness</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#events" style={{color: '#ccc', textDecoration: 'none'}}>Events</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Contact Info</h4>
+                                <p><i className="fas fa-map-marker-alt"></i> 123 Luxury Avenue, Paradise City</p>
+                                <p><i className="fas fa-phone"></i> +1 (555) 123-4567</p>
+                                <p><i className="fas fa-envelope"></i> info@luxehotel.com</p>
+                                <p><i className="fas fa-clock"></i> 24/7 Guest Services</p>
+                            </div>
+                            <div>
+                                <h4>Policies</h4>
+                                <ul style={{listStyle: 'none', padding: 0}}>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#privacy" style={{color: '#ccc', textDecoration: 'none'}}>Privacy Policy</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#terms" style={{color: '#ccc', textDecoration: 'none'}}>Terms of Service</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#cancellation" style={{color: '#ccc', textDecoration: 'none'}}>Cancellation Policy</a></li>
+                                    <li style={{margin: '0.5rem 0'}}><a href="#accessibility" style={{color: '#ccc', textDecoration: 'none'}}>Accessibility</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style={{textAlign: 'center', paddingTop: '2rem', borderTop: '1px solid #555'}}>
+                            <p>&copy; 2024 Luxe Hotel. All rights reserved. | Powered by Advanced Booking System</p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+
+    <!-- Tracking Scripts -->
+    <script>
+        // Google Analytics 4
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+
+        // Facebook Pixel
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', 'YOUR_PIXEL_ID');
+        fbq('track', 'PageView');
+
+        // TikTok Pixel
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+            ttq.load('YOUR_TIKTOK_PIXEL_ID');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+</body>
+</html>
