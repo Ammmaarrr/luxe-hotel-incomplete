@@ -996,7 +996,7 @@
                 <h2>Stay Updated</h2>
                 <p>Subscribe to our newsletter for exclusive offers and updates</p>
                 
-                <form class="newsletter-form" onsubmit="handleNewsletterSubscription(event)">
+                <form class="newsletter-form" onsubmit="return handleNewsletterSubscription(event)">
                     <input type="email" id="newsletter-email" placeholder="Enter your email address" required>
                     <button type="submit">Subscribe</button>
                 </form>
@@ -1069,7 +1069,7 @@
                         Hello! How can I help you today?
                     </div>
                 </div>
-                <form class="chat-input" onsubmit="handleChatMessage(event)">
+                <form class="chat-input" onsubmit="return handleChatMessage(event)">
                     <input type="text" id="chat-input" placeholder="Type your message..." required>
                 </form>
             </div>
