@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxe Hotel - Premium Accommodations</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,11 +13,17 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #2c3e50;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            font-weight: 400;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
         }
 
         .container {
@@ -225,10 +227,14 @@
         }
 
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
             color: #667eea;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .feature-card:hover .feature-icon {
@@ -261,10 +267,22 @@
         }
 
         .room-image {
-            height: 250px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 280px;
             position: relative;
             overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .room-image.deluxe-ocean {
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .room-image.premium-suite {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .room-image.garden-villa {
+            background: linear-gradient(45deg, #11998e 0%, #38ef7d 100%);
         }
 
         .room-image::before {
@@ -274,8 +292,36 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250"><rect width="400" height="250" fill="rgba(255,255,255,0.1)"/><circle cx="100" cy="80" r="30" fill="rgba(255,255,255,0.2)"/><circle cx="300" cy="170" r="40" fill="rgba(255,255,255,0.15)"/></svg>') center/cover;
-            animation: float 4s ease-in-out infinite;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 2px, transparent 2px),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.2) 3px, transparent 3px),
+                radial-gradient(circle at 90% 20%, rgba(255,255,255,0.25) 1px, transparent 1px);
+            background-size: 80px 80px, 120px 120px, 60px 60px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .room-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+        }
+
+        .room-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.95);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            z-index: 2;
         }
 
         .room-info {
@@ -491,6 +537,10 @@
             .nav-links {
                 display: none;
             }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
             
             .form-row {
                 grid-template-columns: 1fr;
@@ -498,6 +548,36 @@
             
             .newsletter-form {
                 flex-direction: column;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .chatbot-window {
+                width: 90vw;
+                height: 70vh;
+                right: 5vw;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
             }
         }
 
@@ -534,732 +614,824 @@
         .close:hover {
             color: #667eea;
         }
+
+        .amenity-tag {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin: 0.25rem 0.25rem 0 0;
+        }
+
+        .upsell-item {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+
+        .upsell-item input {
+            margin-right: 0.5rem;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-message {
+            margin: 0.5rem 0;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .bot-message {
+            background: #f1f1f1;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        .user-message {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">Luxe Hotel</div>
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#rooms">Rooms</a></li>
+                        <li><a href="#amenities">Amenities</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                    <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</div>
+                </nav>
+            </div>
+        </header>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
-
-        // Simulated API configurations
-        const API_CONFIG = {
-            cloudbeds: {
-                baseUrl: 'https://api.cloudbeds.com',
-                apiKey: 'your-cloudbeds-api-key'
-            },
-            mailchimp: {
-                baseUrl: 'https://us1.api.mailchimp.com/3.0',
-                apiKey: 'your-mailchimp-api-key'
-            },
-            stripe: {
-                publishableKey: 'pk_test_your-stripe-key'
-            }
-        };
-
-        // Simulated room data
-        const ROOMS_DATA = [
-            {
-                id: 1,
-                name: 'Deluxe Ocean View',
-                price: 299,
-                image: '/images/deluxe-ocean.jpg',
-                amenities: ['Ocean View', 'King Bed', 'Mini Bar', 'WiFi'],
-                upsells: [
-                    { name: 'Late Checkout', price: 50 },
-                    { name: 'Spa Package', price: 150 },
-                    { name: 'Room Service Credit', price: 75 }
-                ]
-            },
-            {
-                id: 2,
-                name: 'Premium Suite',
-                price: 499,
-                image: '/images/premium-suite.jpg',
-                amenities: ['Separate Living Area', 'Balcony', 'Jacuzzi', 'Butler Service'],
-                upsells: [
-                    { name: 'Champagne Welcome', price: 100 },
-                    { name: 'Private Chef', price: 300 },
-                    { name: 'Airport Transfer', price: 120 }
-                ]
-            },
-            {
-                id: 3,
-                name: 'Garden Villa',
-                price: 699,
-                image: '/images/garden-villa.jpg',
-                amenities: ['Private Garden', 'Pool Access', 'Kitchen', 'Terrace'],
-                upsells: [
-                    { name: 'Private Pool Heating', price: 80 },
-                    { name: 'Garden Party Setup', price: 200 },
-                    { name: 'Personal Concierge', price: 250 }
-                ]
-            }
-        ];
-
-        // Simulated reviews
-        const REVIEWS_DATA = [
-            {
-                id: 1,
-                name: 'Sarah Johnson',
-                rating: 5,
-                text: 'Absolutely fantastic stay! The service was impeccable and the ocean view was breathtaking.',
-                date: '2024-05-15'
-            },
-            {
-                id: 2,
-                name: 'Michael Chen',
-                rating: 5,
-                text: 'Best hotel experience I\'ve ever had. The staff went above and beyond to make our anniversary special.',
-                date: '2024-05-10'
-            },
-            {
-                id: 3,
-                name: 'Emily Davis',
-                rating: 4,
-                text: 'Beautiful property with excellent amenities. Will definitely be returning next year.',
-                date: '2024-05-05'
-            }
-        ];
-
-        // Main App Component
-        function App() {
-            const [bookingData, setBookingData] = useState({
-                checkIn: '',
-                checkOut: '',
-                guests: 1,
-                rooms: 1
-            });
-            const [selectedRoom, setSelectedRoom] = useState(null);
-            const [loading, setLoading] = useState(false);
-            const [chatOpen, setChatOpen] = useState(false);
-            const [chatMessages, setChatMessages] = useState([
-                { type: 'bot', text: 'Hello! How can I help you today?' }
-            ]);
-            const [newsletter, setNewsletter] = useState('');
-            const [modalOpen, setModalOpen] = useState(false);
-
-            // Cloudbeds API Integration
-            const searchRooms = async () => {
-                setLoading(true);
-                try {
-                    // Simulated API call to Cloudbeds
-                    const response = await new Promise(resolve => 
-                        setTimeout(() => resolve({ data: ROOMS_DATA }), 2000)
-                    );
-                    console.log('Rooms loaded from Cloudbeds API');
-                    setLoading(false);
-                } catch (error) {
-                    console.error('Error fetching rooms:', error);
-                    setLoading(false);
-                }
-            };
-
-            // Payment processing with Stripe
-            const processPayment = async (roomId, upsells = []) => {
-                try {
-                    // Simulated Stripe integration
-                    const paymentData = {
-                        roomId,
-                        upsells,
-                        amount: calculateTotal(roomId, upsells),
-                        currency: 'usd'
-                    };
-                    console.log('Processing payment:', paymentData);
-                    // In real implementation, you'd integrate with Stripe here
-                    setModalOpen(true);
-                } catch (error) {
-                    console.error('Payment error:', error);
-                }
-            };
-
-            // Mailchimp integration for newsletter
-            const subscribeNewsletter = async (email) => {
-                try {
-                    // Simulated Mailchimp API call
-                    console.log('Subscribing to newsletter:', email);
-                    setNewsletter('');
-                    alert('Successfully subscribed to newsletter!');
-                } catch (error) {
-                    console.error('Newsletter subscription error:', error);
-                }
-            };
-
-            // Calculate total with upsells
-            const calculateTotal = (roomId, upsells) => {
-                const room = ROOMS_DATA.find(r => r.id === roomId);
-                const upsellTotal = upsells.reduce((sum, upsell) => sum + upsell.price, 0);
-                return room.price + upsellTotal;
-            };
-
-            // Chatbot functionality
-            const sendMessage = (message) => {
-                setChatMessages(prev => [...prev, { type: 'user', text: message }]);
-                
-                // Simulated bot response
-                setTimeout(() => {
-                    const responses = [
-                        'I can help you with room bookings, amenities, and local attractions.',
-                        'Would you like to know more about our spa services?',
-                        'Our concierge team is available 24/7 to assist you.',
-                        'I can arrange special services for your stay.'
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    setChatMessages(prev => [...prev, { type: 'bot', text: randomResponse }]);
-                }, 1000);
-            };
-
-            useEffect(() => {
-                // Initialize tracking pixels
-                if (typeof gtag !== 'undefined') {
-                    gtag('config', 'GA_MEASUREMENT_ID');
-                }
-                
-                // Facebook Pixel
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'PageView');
-                }
-                
-                // TikTok Pixel
-                if (typeof ttq !== 'undefined') {
-                    ttq.page();
-                }
-            }, []);
-
-            return (
-                <div className="App">
-                    <Header />
-                    <HeroSection 
-                        bookingData={bookingData}
-                        setBookingData={setBookingData}
-                        onSearch={searchRooms}
-                        loading={loading}
-                    />
-                    <FeaturesSection />
-                    <RoomsSection 
-                        rooms={ROOMS_DATA}
-                        onBookRoom={processPayment}
-                    />
-                    <ReviewsSection reviews={REVIEWS_DATA} />
-                    <NewsletterSection 
-                        newsletter={newsletter}
-                        setNewsletter={setNewsletter}
-                        onSubscribe={subscribeNewsletter}
-                    />
-                    <Footer />
-                    <Chatbot 
-                        isOpen={chatOpen}
-                        setIsOpen={setChatOpen}
-                        messages={chatMessages}
-                        onSendMessage={sendMessage}
-                    />
-                    <BookingModal 
-                        isOpen={modalOpen}
-                        onClose={() => setModalOpen(false)}
-                    />
-                </div>
-            );
-        }
-
-        // Header Component
-        function Header() {
-            return (
-                <header>
-                    <div className="container">
-                        <nav>
-                            <div className="logo">Luxe Hotel</div>
-                            <ul className="nav-links">
-                                <li><a href="#home">Home</a></li>
-                                <li><a href="#rooms">Rooms</a></li>
-                                <li><a href="#amenities">Amenities</a></li>
-                                <li><a href="#reviews">Reviews</a></li>
-                                <li><a href="#contact">Contact</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </header>
-            );
-        }
-
-        // Hero Section Component
-        function HeroSection({ bookingData, setBookingData, onSearch, loading }) {
-            const handleInputChange = (field, value) => {
-                setBookingData(prev => ({ ...prev, [field]: value }));
-            };
-
-            const handleSearch = (e) => {
-                e.preventDefault();
-                onSearch();
-            };
-
-            return (
-                <section className="hero" id="home">
-                    <div className="container">
-                        <div className="hero-content">
-                            <h1>Luxury Awaits</h1>
-                            <p>Experience unparalleled comfort and elegance</p>
-                            
-                            <form className="booking-form" onSubmit={handleSearch}>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>Check-in Date</label>
-                                        <input 
-                                            type="date" 
-                                            value={bookingData.checkIn}
-                                            onChange={(e) => handleInputChange('checkIn', e.target.value)}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Check-out Date</label>
-                                        <input 
-                                            type="date" 
-                                            value={bookingData.checkOut}
-                                            onChange={(e) => handleInputChange('checkOut', e.target.value)}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Guests</label>
-                                        <select 
-                                            value={bookingData.guests}
-                                            onChange={(e) => handleInputChange('guests', e.target.value)}
-                                        >
-                                            {[1,2,3,4,5,6].map(num => (
-                                                <option key={num} value={num}>{num} Guest{num > 1 ? 's' : ''}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Rooms</label>
-                                        <select 
-                                            value={bookingData.rooms}
-                                            onChange={(e) => handleInputChange('rooms', e.target.value)}
-                                        >
-                                            {[1,2,3,4].map(num => (
-                                                <option key={num} value={num}>{num} Room{num > 1 ? 's' : ''}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <button type="submit" className="search-btn" disabled={loading}>
-                                    {loading ? 'Searching...' : 'Search Rooms'}
-                                </button>
-                            </form>
-
-                            {loading && (
-                                <div className="loading">
-                                    <div className="spinner"></div>
-                                    <p>Finding the perfect rooms for you...</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        // Features Section Component
-        function FeaturesSection() {
-            const features = [
-                { icon: 'fas fa-wifi', title: 'Free WiFi', desc: 'High-speed internet throughout the property' },
-                { icon: 'fas fa-swimming-pool', title: 'Pool & Spa', desc: 'Relax in our luxurious facilities' },
-                { icon: 'fas fa-concierge-bell', title: '24/7 Service', desc: 'Round-the-clock concierge assistance' },
-                { icon: 'fas fa-utensils', title: 'Fine Dining', desc: 'World-class restaurants and room service' },
-                { icon: 'fas fa-car', title: 'Valet Parking', desc: 'Complimentary valet service' },
-                { icon: 'fas fa-dumbbell', title: 'Fitness Center', desc: 'State-of-the-art gym equipment' }
-            ];
-
-            return (
-                <section className="features" id="amenities">
-                    <div className="container">
-                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
-                            Premium Amenities
-                        </h2>
-                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
-                            Everything you need for the perfect stay
-                        </p>
-                        
-                        <div className="features-grid">
-                            {features.map((feature, index) => (
-                                <div key={index} className="feature-card">
-                                    <i className={`feature-icon ${feature.icon}`}></i>
-                                    <h3>{feature.title}</h3>
-                                    <p>{feature.desc}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        // Rooms Section Component
-        function RoomsSection({ rooms, onBookRoom }) {
-            const [selectedUpsells, setSelectedUpsells] = useState({});
-
-            const toggleUpsell = (roomId, upsell) => {
-                setSelectedUpsells(prev => {
-                    const roomUpsells = prev[roomId] || [];
-                    const exists = roomUpsells.find(u => u.name === upsell.name);
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Luxury Awaits</h1>
+                    <p>Experience unparalleled comfort and elegance</p>
                     
-                    if (exists) {
-                        return {
-                            ...prev,
-                            [roomId]: roomUpsells.filter(u => u.name !== upsell.name)
-                        };
-                    } else {
-                        return {
-                            ...prev,
-                            [roomId]: [...roomUpsells, upsell]
-                        };
-                    }
-                });
-            };
-
-            const handleBookRoom = (roomId) => {
-                const upsells = selectedUpsells[roomId] || [];
-                onBookRoom(roomId, upsells);
-            };
-
-            return (
-                <section className="rooms-section" id="rooms">
-                    <div className="container">
-                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
-                            Luxurious Accommodations
-                        </h2>
-                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
-                            Choose from our collection of premium rooms and suites
-                        </p>
-                        
-                        <div className="rooms-grid">
-                            {rooms.map(room => (
-                                <div key={room.id} className="room-card">
-                                    <div className="room-image"></div>
-                                    <div className="room-info">
-                                        <h3>{room.name}</h3>
-                                        <div className="room-price">${room.price}/night</div>
-                                        <div style={{marginBottom: '1rem'}}>
-                                            {room.amenities.map((amenity, idx) => (
-                                                <span key={idx} style={{
-                                                    display: 'inline-block',
-                                                    background: '#e9ecef',
-                                                    padding: '0.25rem 0.5rem',
-                                                    borderRadius: '15px',
-                                                    fontSize: '0.9rem',
-                                                    margin: '0.25rem 0.25rem 0 0'
-                                                }}>
-                                                    {amenity}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        
-                                        <div className="upsell-offers">
-                                            <div className="upsell-title">
-                                                <i className="fas fa-star" style={{marginRight: '0.5rem'}}></i>
-                                                Enhance Your Stay
-                                            </div>
-                                            {room.upsells.map((upsell, idx) => (
-                                                <label key={idx} style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    margin: '0.5rem 0',
-                                                    cursor: 'pointer'
-                                                }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        onChange={() => toggleUpsell(room.id, upsell)}
-                                                        style={{marginRight: '0.5rem'}}
-                                                    />
-                                                    <span>{upsell.name} (+${upsell.price})</span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                        
-                                        <button 
-                                            className="search-btn"
-                                            onClick={() => handleBookRoom(room.id)}
-                                            style={{marginTop: '1rem'}}
-                                        >
-                                            Book Now - ${room.price + (selectedUpsells[room.id]?.reduce((sum, u) => sum + u.price, 0) || 0)}
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                    <form class="booking-form" onsubmit="return handleBookingSearch(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Check-in Date</label>
+                                <input type="date" id="checkin" required min="" />
+                            </div>
+                            <div class="form-group">
+                                <label>Check-out Date</label>
+                                <input type="date" id="checkout" required min="" />
+                            </div>
+                            <div class="form-group">
+                                <label>Guests</label>
+                                <select id="guests">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="5">5 Guests</option>
+                                    <option value="6">6 Guests</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Rooms</label>
+                                <select id="rooms">
+                                    <option value="1">1 Room</option>
+                                    <option value="2">2 Rooms</option>
+                                    <option value="3">3 Rooms</option>
+                                    <option value="4">4 Rooms</option>
+                                </select>
+                            </div>
                         </div>
+                        <button type="submit" class="search-btn" id="search-btn">
+                            Search Rooms
+                        </button>
+                    </form>
+
+                    <div class="loading" id="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Finding the perfect rooms for you...</p>
                     </div>
-                </section>
-            );
-        }
-
-        // Reviews Section Component
-        function ReviewsSection({ reviews }) {
-            return (
-                <section className="reviews-section" id="reviews">
-                    <div className="container">
-                        <h2 style={{textAlign: 'center', fontSize: '2.5rem', marginBottom: '1rem'}}>
-                            Guest Reviews
-                        </h2>
-                        <p style={{textAlign: 'center', fontSize: '1.2rem', color: '#666'}}>
-                            See what our guests are saying about their experience
-                        </p>
-                        
-                        <div className="reviews-grid">
-                            {reviews.map(review => (
-                                <div key={review.id} className="review-card">
-                                    <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem'}}>
-                                        <div style={{
-                                            width: '50px',
-                                            height: '50px',
-                                            borderRadius: '50%',
-                                            background: '#667eea',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            color: 'white',
-                                            fontWeight: 'bold',
-                                            marginRight: '1rem'
-                                        }}>
-                                            {review.name.split(' ').map(n => n[0]).join('')}
-                                        </div>
-                                        <div>
-                                            <h4>{review.name}</h4>
-                                            <div style={{color: '#ffc107'}}>
-                                                {'★'.repeat(review.rating)}{'☆'.repeat(5-review.rating)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p style={{fontStyle: 'italic', marginBottom: '1rem'}}>"{review.text}"</p>
-                                    <small style={{color: '#666'}}>{new Date(review.date).toLocaleDateString()}</small>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        // Newsletter Section Component
-        function NewsletterSection({ newsletter, setNewsletter, onSubscribe }) {
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (newsletter) {
-                    onSubscribe(newsletter);
-                }
-            };
-
-            return (
-                <section className="newsletter">
-                    <div className="container">
-                        <h2>Stay Updated</h2>
-                        <p>Subscribe to our newsletter for exclusive offers and updates</p>
-                        
-                        <form className="newsletter-form" onSubmit={handleSubmit}>
-                            <input
-                                type="email"
-                                placeholder="Enter your email address"
-                                value={newsletter}
-                                onChange={(e) => setNewsletter(e.target.value)}
-                                required
-                            />
-                            <button type="submit">Subscribe</button>
-                        </form>
-                        
-                        <div className="payment-methods">
-                            <i className="fab fa-cc-visa payment-icon"></i>
-                            <i className="fab fa-cc-mastercard payment-icon"></i>
-                            <i className="fab fa-cc-amex payment-icon"></i>
-                            <i className="fab fa-cc-paypal payment-icon"></i>
-                            <i className="fab fa-apple-pay payment-icon"></i>
-                            <i className="fab fa-google-pay payment-icon"></i>
-                        </div>
-                    </div>
-                </section>
-            );
-        }
-
-        // Chatbot Component
-        function Chatbot({ isOpen, setIsOpen, messages, onSendMessage }) {
-            const [inputMessage, setInputMessage] = useState('');
-            const messagesEndRef = useRef(null);
-
-            const scrollToBottom = () => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            };
-
-            useEffect(() => {
-                scrollToBottom();
-            }, [messages]);
-
-            const handleSendMessage = (e) => {
-                e.preventDefault();
-                if (inputMessage.trim()) {
-                    onSendMessage(inputMessage);
-                    setInputMessage('');
-                }
-            };
-
-            return (
-                <div className="chatbot">
-                    <div className={`chatbot-window ${isOpen ? 'open' : ''}`}>
-                        <div className="chat-header">
-                            <span>Hotel Assistant</span>
-                            <span 
-                                className="close" 
-                                onClick={() => setIsOpen(false)}
-                                style={{float: 'right', cursor: 'pointer'}}
-                            >
-                                ×
-                            </span>
-                        </div>
-                        <div className="chat-messages">
-                            {messages.map((message, index) => (
-                                <div key={index} style={{
-                                    margin: '0.5rem 0',
-                                    padding: '0.5rem 1rem',
-                                    borderRadius: '15px',
-                                    background: message.type === 'user' ? '#667eea' : '#f1f1f1',
-                                    color: message.type === 'user' ? 'white' : '#333',
-                                    alignSelf: message.type === 'user' ? 'flex-end' : 'flex-start',
-                                    maxWidth: '80%'
-                                }}>
-                                    {message.text}
-                                </div>
-                            ))}
-                            <div ref={messagesEndRef} />
-                        </div>
-                        <form className="chat-input" onSubmit={handleSendMessage}>
-                            <input
-                                type="text"
-                                placeholder="Type your message..."
-                                value={inputMessage}
-                                onChange={(e) => setInputMessage(e.target.value)}
-                            />
-                        </form>
-                    </div>
-                    <button 
-                        className="chatbot-toggle"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        <i className="fas fa-comments"></i>
-                    </button>
                 </div>
-            );
-        }
+            </div>
+        </section>
 
-        // Booking Modal Component
-        function BookingModal({ isOpen, onClose }) {
-            if (!isOpen) return null;
+        <!-- Features Section -->
+        <section class="features" id="amenities">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">
+                    Premium Amenities
+                </h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #666;">
+                    Everything you need for the perfect stay
+                </p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📶</div>
+                        <h3>Free WiFi</h3>
+                        <p>High-speed internet throughout the property</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏊</div>
+                        <h3>Pool & Spa</h3>
+                        <p>Relax in our luxurious facilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛎️</div>
+                        <h3>24/7 Service</h3>
+                        <p>Round-the-clock concierge assistance</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🍽️</div>
+                        <h3>Fine Dining</h3>
+                        <p>World-class restaurants and room service</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚗</div>
+                        <h3>Valet Parking</h3>
+                        <p>Complimentary valet service</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💪</div>
+                        <h3>Fitness Center</h3>
+                        <p>State-of-the-art gym equipment</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-            return (
-                <div className="modal" style={{display: 'block'}}>
-                    <div className="modal-content">
-                        <span className="close" onClick={onClose}>&times;</span>
-                        <h2 style={{color: '#667eea', marginBottom: '1rem'}}>Booking Confirmed!</h2>
-                        <div style={{textAlign: 'center'}}>
-                            <i className="fas fa-check-circle" style={{
-                                fontSize: '4rem',
-                                color: '#28a745',
-                                marginBottom: '1rem'
-                            }}></i>
-                            <p>Thank you for your booking! You will receive a confirmation email shortly.</p>
-                            <p style={{marginTop: '1rem', color: '#666'}}>
-                                Our concierge team will contact you within 24 hours to finalize your arrangements.
-                            </p>
-                            <button 
-                                className="search-btn" 
-                                onClick={onClose}
-                                style={{marginTop: '1rem', width: 'auto', padding: '0.5rem 2rem'}}
-                            >
-                                Close
+        <!-- Rooms Section -->
+        <section class="rooms-section" id="rooms">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">
+                    Luxurious Accommodations
+                </h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #666;">
+                    Choose from our collection of premium rooms and suites
+                </p>
+                
+                <div class="rooms-grid">
+                    <!-- Room 1: Deluxe Ocean View -->
+                    <div class="room-card">
+                        <div class="room-image deluxe-ocean">
+                            <div class="room-badge">Popular</div>
+                        </div>
+                        <div class="room-info">
+                            <h3>Deluxe Ocean View</h3>
+                            <div class="room-price">$299/night</div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="amenity-tag">Ocean View</span>
+                                <span class="amenity-tag">King Bed</span>
+                                <span class="amenity-tag">Mini Bar</span>
+                                <span class="amenity-tag">WiFi</span>
+                            </div>
+                            
+                            <div class="upsell-offers">
+                                <div class="upsell-title">
+                                    ⭐ Enhance Your Stay
+                                </div>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="50" onchange="updateRoomPrice(1, this)">
+                                    <span>Late Checkout (+$50)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="150" onchange="updateRoomPrice(1, this)">
+                                    <span>Spa Package (+$150)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="75" onchange="updateRoomPrice(1, this)">
+                                    <span>Room Service Credit (+$75)</span>
+                                </label>
+                            </div>
+                            
+                            <button class="search-btn" onclick="bookRoom(1, 'Deluxe Ocean View', 299)" id="book-btn-1">
+                                Book Now - $299
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Room 2: Premium Suite -->
+                    <div class="room-card">
+                        <div class="room-image premium-suite">
+                            <div class="room-badge">Luxury</div>
+                        </div>
+                        <div class="room-info">
+                            <h3>Premium Suite</h3>
+                            <div class="room-price">$499/night</div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="amenity-tag">Separate Living Area</span>
+                                <span class="amenity-tag">Balcony</span>
+                                <span class="amenity-tag">Jacuzzi</span>
+                                <span class="amenity-tag">Butler Service</span>
+                            </div>
+                            
+                            <div class="upsell-offers">
+                                <div class="upsell-title">
+                                    ⭐ Enhance Your Stay
+                                </div>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="100" onchange="updateRoomPrice(2, this)">
+                                    <span>Champagne Welcome (+$100)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="300" onchange="updateRoomPrice(2, this)">
+                                    <span>Private Chef (+$300)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="120" onchange="updateRoomPrice(2, this)">
+                                    <span>Airport Transfer (+$120)</span>
+                                </label>
+                            </div>
+                            
+                            <button class="search-btn" onclick="bookRoom(2, 'Premium Suite', 499)" id="book-btn-2">
+                                Book Now - $499
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Room 3: Garden Villa -->
+                    <div class="room-card">
+                        <div class="room-image garden-villa">
+                            <div class="room-badge">Exclusive</div>
+                        </div>
+                        <div class="room-info">
+                            <h3>Garden Villa</h3>
+                            <div class="room-price">$699/night</div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="amenity-tag">Private Garden</span>
+                                <span class="amenity-tag">Pool Access</span>
+                                <span class="amenity-tag">Kitchen</span>
+                                <span class="amenity-tag">Terrace</span>
+                            </div>
+                            
+                            <div class="upsell-offers">
+                                <div class="upsell-title">
+                                    ⭐ Enhance Your Stay
+                                </div>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="80" onchange="updateRoomPrice(3, this)">
+                                    <span>Private Pool Heating (+$80)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="200" onchange="updateRoomPrice(3, this)">
+                                    <span>Garden Party Setup (+$200)</span>
+                                </label>
+                                <label class="upsell-item">
+                                    <input type="checkbox" data-price="250" onchange="updateRoomPrice(3, this)">
+                                    <span>Personal Concierge (+$250)</span>
+                                </label>
+                            </div>
+                            
+                            <button class="search-btn" onclick="bookRoom(3, 'Garden Villa', 699)" id="book-btn-3">
+                                Book Now - $699
                             </button>
                         </div>
                     </div>
                 </div>
-            );
-        }
+            </div>
+        </section>
 
-        // Footer Component
-        function Footer() {
-            return (
-                <footer>
-                    <div className="container">
-                        <div className="footer-content">
+        <!-- Reviews Section -->
+        <section class="reviews-section" id="reviews">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">
+                    Guest Reviews
+                </h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #666;">
+                    See what our guests are saying about their experience
+                </p>
+                
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div class="reviewer-avatar">SJ</div>
                             <div>
-                                <h3>Luxe Hotel</h3>
-                                <p>Experience luxury like never before. Our commitment to excellence ensures every guest enjoys an unforgettable stay.</p>
-                                <div style={{marginTop: '1rem'}}>
-                                    <i className="fab fa-facebook" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
-                                    <i className="fab fa-instagram" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
-                                    <i className="fab fa-twitter" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
-                                    <i className="fab fa-linkedin" style={{fontSize: '1.5rem', margin: '0 0.5rem', cursor: 'pointer'}}></i>
-                                </div>
-                            </div>
-                            <div>
-                                <h4>Quick Links</h4>
-                                <ul style={{listStyle: 'none', padding: 0}}>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#rooms" style={{color: '#ccc', textDecoration: 'none'}}>Rooms & Suites</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#amenities" style={{color: '#ccc', textDecoration: 'none'}}>Amenities</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#dining" style={{color: '#ccc', textDecoration: 'none'}}>Dining</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#spa" style={{color: '#ccc', textDecoration: 'none'}}>Spa & Wellness</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#events" style={{color: '#ccc', textDecoration: 'none'}}>Events</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4>Contact Info</h4>
-                                <p><i className="fas fa-map-marker-alt"></i> 123 Luxury Avenue, Paradise City</p>
-                                <p><i className="fas fa-phone"></i> +1 (555) 123-4567</p>
-                                <p><i className="fas fa-envelope"></i> info@luxehotel.com</p>
-                                <p><i className="fas fa-clock"></i> 24/7 Guest Services</p>
-                            </div>
-                            <div>
-                                <h4>Policies</h4>
-                                <ul style={{listStyle: 'none', padding: 0}}>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#privacy" style={{color: '#ccc', textDecoration: 'none'}}>Privacy Policy</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#terms" style={{color: '#ccc', textDecoration: 'none'}}>Terms of Service</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#cancellation" style={{color: '#ccc', textDecoration: 'none'}}>Cancellation Policy</a></li>
-                                    <li style={{margin: '0.5rem 0'}}><a href="#accessibility" style={{color: '#ccc', textDecoration: 'none'}}>Accessibility</a></li>
-                                </ul>
+                                <h4>Sarah Johnson</h4>
+                                <div style="color: #ffc107;">★★★★★</div>
                             </div>
                         </div>
-                        <div style={{textAlign: 'center', paddingTop: '2rem', borderTop: '1px solid #555'}}>
-                            <p>&copy; 2024 Luxe Hotel. All rights reserved. | Powered by Advanced Booking System</p>
+                        <p style="font-style: italic; margin-bottom: 1rem;">"Absolutely fantastic stay! The service was impeccable and the ocean view was breathtaking."</p>
+                        <small style="color: #666;">May 15, 2024</small>
+                    </div>
+
+                    <div class="review-card">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div class="reviewer-avatar">MC</div>
+                            <div>
+                                <h4>Michael Chen</h4>
+                                <div style="color: #ffc107;">★★★★★</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; margin-bottom: 1rem;">"Best hotel experience I've ever had. The staff went above and beyond to make our anniversary special."</p>
+                        <small style="color: #666;">May 10, 2024</small>
+                    </div>
+
+                    <div class="review-card">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <div class="reviewer-avatar">ED</div>
+                            <div>
+                                <h4>Emily Davis</h4>
+                                <div style="color: #ffc107;">★★★★☆</div>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; margin-bottom: 1rem;">"Beautiful property with excellent amenities. Will definitely be returning next year."</p>
+                        <small style="color: #666;">May 5, 2024</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="container">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for exclusive offers and updates</p>
+                
+                <form class="newsletter-form" onsubmit="handleNewsletterSubscription(event)">
+                    <input type="email" id="newsletter-email" placeholder="Enter your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                
+                <div class="payment-methods">
+                    <div class="payment-icon">💳</div>
+                    <div class="payment-icon">💰</div>
+                    <div class="payment-icon">🏦</div>
+                    <div class="payment-icon">📱</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact">
+            <div class="container">
+                <div class="footer-content">
+                    <div>
+                        <h3>Luxe Hotel</h3>
+                        <p>Experience luxury like never before. Our commitment to excellence ensures every guest enjoys an unforgettable stay.</p>
+                        <div style="margin-top: 1rem;">
+                            <span style="font-size: 1.5rem; margin: 0 0.5rem; cursor: pointer;">📘</span>
+                            <span style="font-size: 1.5rem; margin: 0 0.5rem; cursor: pointer;">📷</span>
+                            <span style="font-size: 1.5rem; margin: 0 0.5rem; cursor: pointer;">🐦</span>
+                            <span style="font-size: 1.5rem; margin: 0 0.5rem; cursor: pointer;">💼</span>
                         </div>
                     </div>
-                </footer>
-            );
+                    <div>
+                        <h4>Quick Links</h4>
+                        <ul style="list-style: none; padding: 0">
+                            <li style="margin: 0.5rem 0"><a href="#rooms" style="color: #ccc; text-decoration: none">Rooms & Suites</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#amenities" style="color: #ccc; text-decoration: none">Amenities</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#dining" style="color: #ccc; text-decoration: none">Dining</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#spa" style="color: #ccc; text-decoration: none">Spa & Wellness</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#events" style="color: #ccc; text-decoration: none">Events</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Contact Info</h4>
+                        <p>📍 123 Luxury Avenue, Paradise City</p>
+                        <p>📞 +1 (555) 123-4567</p>
+                        <p>✉️ info@luxehotel.com</p>
+                        <p>🕐 24/7 Guest Services</p>
+                    </div>
+                    <div>
+                        <h4>Policies</h4>
+                        <ul style="list-style: none; padding: 0">
+                            <li style="margin: 0.5rem 0"><a href="#privacy" style="color: #ccc; text-decoration: none">Privacy Policy</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#terms" style="color: #ccc; text-decoration: none">Terms of Service</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#cancellation" style="color: #ccc; text-decoration: none">Cancellation Policy</a></li>
+                            <li style="margin: 0.5rem 0"><a href="#accessibility" style="color: #ccc; text-decoration: none">Accessibility</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center; padding-top: 2rem; border-top: 1px solid #555">
+                    <p>&copy; 2024 Luxe Hotel. All rights reserved. | Powered by Advanced Booking System</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot">
+            <div class="chatbot-window" id="chatbot-window">
+                <div class="chat-header">
+                    <span>Hotel Assistant</span>
+                    <span class="close" onclick="toggleChatbot()" style="float: right; cursor: pointer">×</span>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-message bot-message">
+                        Hello! How can I help you today?
+                    </div>
+                </div>
+                <form class="chat-input" onsubmit="handleChatMessage(event)">
+                    <input type="text" id="chat-input" placeholder="Type your message..." required>
+                </form>
+            </div>
+            <button class="chatbot-toggle" onclick="toggleChatbot()">
+                💬
+            </button>
+        </div>
+
+        <!-- Booking Modal -->
+        <div class="modal" id="booking-modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeBookingModal()">&times;</span>
+                <h2 style="color: #667eea; margin-bottom: 1rem;">Booking Confirmed!</h2>
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; color: #28a745; margin-bottom: 1rem;">✅</div>
+                    <p>Thank you for your booking! You will receive a confirmation email shortly.</p>
+                    <p style="margin-top: 1rem; color: #666;" id="booking-details">
+                        Our concierge team will contact you within 24 hours to finalize your arrangements.
+                    </p>
+                    <button class="search-btn" onclick="closeBookingModal()" style="margin-top: 1rem; width: auto; padding: 0.5rem 2rem;">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let chatOpen = false;
+        let roomPrices = {
+            1: 299,
+            2: 499,
+            3: 699
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum dates for check-in and check-out
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkin').min = today;
+            document.getElementById('checkout').min = today;
+
+            // Add date validation
+            document.getElementById('checkin').addEventListener('change', function() {
+                const checkinDate = new Date(this.value);
+                const nextDay = new Date(checkinDate);
+                nextDay.setDate(nextDay.getDate() + 1);
+                document.getElementById('checkout').min = nextDay.toISOString().split('T')[0];
+            });
+
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Load saved preferences
+            loadUserPreferences();
+        });
+
+        // Booking search functionality
+        function handleBookingSearch(event) {
+            event.preventDefault();
+            
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+            const guests = document.getElementById('guests').value;
+            const rooms = document.getElementById('rooms').value;
+
+            if (!checkin || !checkout) {
+                showNotification('Please select check-in and check-out dates', 'error');
+                return;
+            }
+
+            const checkinDate = new Date(checkin);
+            const checkoutDate = new Date(checkout);
+
+            if (checkoutDate <= checkinDate) {
+                showNotification('Check-out date must be after check-in date', 'error');
+                return;
+            }
+
+            // Show loading
+            const loadingDiv = document.getElementById('loading');
+            const searchBtn = document.getElementById('search-btn');
+            
+            loadingDiv.style.display = 'block';
+            searchBtn.disabled = true;
+            searchBtn.textContent = 'Searching...';
+
+            // Simulate API call
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+                searchBtn.disabled = false;
+                searchBtn.textContent = 'Search Rooms';
+                
+                // Scroll to rooms section
+                document.getElementById('rooms').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                showNotification('Rooms found! Check availability below.', 'success');
+                
+                // Save search preferences
+                saveUserPreferences({checkin, checkout, guests, rooms});
+            }, 2000);
         }
 
-        // Render the app
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+        // Room price update functionality
+        function updateRoomPrice(roomId, checkbox) {
+            const basePrice = roomPrices[roomId];
+            const checkboxes = document.querySelectorAll(`#book-btn-${roomId}`).parentNode.querySelectorAll('input[type="checkbox"]:checked');
+            let additionalPrice = 0;
 
-    <!-- Tracking Scripts -->
-    <script>
-        // Google Analytics 4
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
+            // Calculate total from all checked upsells for this room
+            const roomCard = checkbox.closest('.room-card');
+            const checkedBoxes = roomCard.querySelectorAll('input[type="checkbox"]:checked');
+            
+            checkedBoxes.forEach(box => {
+                additionalPrice += parseInt(box.dataset.price);
+            });
 
-        // Facebook Pixel
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', 'YOUR_PIXEL_ID');
-        fbq('track', 'PageView');
+            const totalPrice = basePrice + additionalPrice;
+            const bookBtn = document.getElementById(`book-btn-${roomId}`);
+            bookBtn.textContent = `Book Now - $${totalPrice}`;
+        }
 
-        // TikTok Pixel
-        !function (w, d, t) {
-            w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-            ttq.load('YOUR_TIKTOK_PIXEL_ID');
-            ttq.page();
-        }(window, document, 'ttq');
-    </script>
+        // Room booking functionality
+        function bookRoom(roomId, roomName, basePrice) {
+            const checkin = document.getElementById('checkin').value;
+            const checkout = document.getElementById('checkout').value;
+
+            if (!checkin || !checkout) {
+                showNotification('Please select your dates first', 'error');
+                document.getElementById('checkin').focus();
+                return;
+            }
+
+            // Calculate total with upsells
+            const roomCard = document.querySelector(`#book-btn-${roomId}`).closest('.room-card');
+            const checkedBoxes = roomCard.querySelectorAll('input[type="checkbox"]:checked');
+            let upsellTotal = 0;
+            let upsellDetails = [];
+
+            checkedBoxes.forEach(box => {
+                const price = parseInt(box.dataset.price);
+                upsellTotal += price;
+                upsellDetails.push(box.nextElementSibling.textContent);
+            });
+
+            const totalPrice = basePrice + upsellTotal;
+            const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+            const grandTotal = totalPrice * nights;
+
+            // Update booking details
+            let detailsHTML = `
+                <strong>Booking Summary:</strong><br>
+                Room: ${roomName}<br>
+                Dates: ${checkin} to ${checkout} (${nights} nights)<br>
+                Base Price: $${basePrice}/night<br>
+            `;
+
+            if (upsellDetails.length > 0) {
+                detailsHTML += `Add-ons: ${upsellDetails.join(', ')}<br>`;
+                detailsHTML += `Upsells: +$${upsellTotal}/night<br>`;
+            }
+
+            detailsHTML += `<strong>Total: $${grandTotal}</strong>`;
+
+            document.getElementById('booking-details').innerHTML = detailsHTML;
+            
+            // Show booking modal
+            document.getElementById('booking-modal').style.display = 'block';
+
+            // Simulate booking process
+            setTimeout(() => {
+                showNotification('Booking confirmed! Confirmation email sent.', 'success');
+            }, 1000);
+        }
+
+        // Newsletter subscription
+        function handleNewsletterSubscription(event) {
+            event.preventDefault();
+            const email = document.getElementById('newsletter-email').value;
+            
+            if (!email) {
+                showNotification('Please enter your email address', 'error');
+                return;
+            }
+
+            // Simulate API call
+            showNotification('Thank you for subscribing! You\'ll receive our newsletter shortly.', 'success');
+            document.getElementById('newsletter-email').value = '';
+        }
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const chatWindow = document.getElementById('chatbot-window');
+            chatOpen = !chatOpen;
+            
+            if (chatOpen) {
+                chatWindow.classList.add('open');
+            } else {
+                chatWindow.classList.remove('open');
+            }
+        }
+
+        function handleChatMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                const responses = [
+                    'I can help you with room bookings, amenities, and local attractions.',
+                    'Would you like to know more about our spa services?',
+                    'Our concierge team is available 24/7 to assist you.',
+                    'I can arrange special services for your stay.',
+                    'Our restaurant serves cuisine from around the world.',
+                    'We offer complimentary shuttle service to the airport.',
+                    'The fitness center is open 24/7 for our guests.',
+                    'Would you like me to check room availability for specific dates?'
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                addChatMessage(randomResponse, 'bot');
+            }, 1000);
+        }
+
+        function addChatMessage(text, type) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}-message`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Modal functions
+        function closeBookingModal() {
+            document.getElementById('booking-modal').style.display = 'none';
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+            } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.right = '0';
+                navLinks.style.backgroundColor = 'rgba(255,255,255,0.95)';
+                navLinks.style.padding = '1rem';
+                navLinks.style.borderRadius = '0 0 10px 10px';
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            if (type === 'error') {
+                notification.style.backgroundColor = '#dc3545';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // User preferences
+        function saveUserPreferences(data) {
+            localStorage.setItem('luxeHotelPreferences', JSON.stringify(data));
+        }
+
+        function loadUserPreferences() {
+            const saved = localStorage.getItem('luxeHotelPreferences');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (data.checkin) document.getElementById('checkin').value = data.checkin;
+                if (data.checkout) document.getElementById('checkout').value = data.checkout;
+                if (data.guests) document.getElementById('guests').value = data.guests;
+                if (data.rooms) document.getElementById('rooms').value = data.rooms;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('booking-modal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+
+        // Add some enhanced interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to room cards
+            const roomCards = document.querySelectorAll('.room-card');
+            roomCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Add parallax effect to hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                }
+            });
+        });
+
+        // Analytics tracking (simulated)
+        function trackEvent(eventName, properties = {}) {
+            console.log('Analytics Event:', eventName, properties);
+            // In a real implementation, this would send data to analytics services
+        }
+
+        // Track booking attempts
+        function trackBookingAttempt(roomName, price) {
+            trackEvent('booking_attempt', {
+                room_name: roomName,
+                price: price,
+                timestamp: new Date().toISOString()
+            });
+        }
 </body>
 </html>
